@@ -1,6 +1,7 @@
 package com.proyectos.vn_cambio_rol.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -15,9 +16,10 @@ import com.proyectos.vn_cambio_rol.entity.UserRole;
 import com.proyectos.vn_cambio_rol.repository.RoleRepository;
 import com.proyectos.vn_cambio_rol.repository.UserRepository;
 import com.proyectos.vn_cambio_rol.repository.UserRoleRepository;
+import com.proyectos.vn_cambio_rol.service.UserService;
 
 @Service
-public class UserServiceImpl {
+public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserRepository userRepository;
 
@@ -51,11 +53,14 @@ public class UserServiceImpl {
 	}
 
 	public Set<Role> obtenerRolesDeUsuario(Long userId) {
-		User user = userRepository.findById(userId)
-				.orElseThrow(() -> new NoSuchElementException("Usuario no encontrado"));
+	    User user = userRepository.findById(userId)
+	            .orElseThrow(() -> new NoSuchElementException("Usuario no encontrado"));
 
-		return user.getUserRoles().stream().map(UserRole::getRole).collect(Collectors.toSet());
+	    return userRoleRepository.findByUser(user).stream()
+	            .map(UserRole::getRole)  
+	            .collect(Collectors.toSet());  
 	}
+
 
 	public Set<User> obtenerUsuariosDeRol(Long roleId) {
 		Role role = roleRepository.findById(roleId)
@@ -68,6 +73,11 @@ public class UserServiceImpl {
 		eliminarRolDeUsuario(userId, oldRoleId);
 
 		asignarRolAUsuario(userId, newRoleId);
+	}
+
+	@Override
+	public List<User> getAllUsers() {
+		return userRepository.findAll();
 	}
 
 }

@@ -14,6 +14,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +22,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "users")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +37,6 @@ public class User {
 	@Column(nullable = false)
 	private boolean active;
 
-	 @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	    private Set<UserRole> userRoles = new HashSet<>();
+//	 @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+//	    private Set<UserRole> userRoles = new HashSet<>();
 }

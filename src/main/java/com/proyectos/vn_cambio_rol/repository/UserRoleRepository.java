@@ -1,5 +1,6 @@
 package com.proyectos.vn_cambio_rol.repository;
 
+import com.proyectos.vn_cambio_rol.entity.User;
 import com.proyectos.vn_cambio_rol.entity.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -18,4 +19,6 @@ public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
 
     // Buscar todos los usuarios con un rol específico
     Set<UserRole> findByRoleId(Long roleId);
+    
+    Set<UserRole> findByUser(User user); 
 }
