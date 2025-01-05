@@ -29,6 +29,6 @@ public class Role {
 	@Column(nullable = false, unique = true, length = 50)
 	private String name;
 
-	@OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
-    private Set<UserRole> userRoles = new HashSet<>();
+	//@OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+    //private Set<UserRole> userRoles = new HashSet<>();
 }

@@ -1,6 +1,7 @@
 package com.proyectos.vn_cambio_rol.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.proyectos.vn_cambio_rol.dto.CambiarRolRequest;
 import com.proyectos.vn_cambio_rol.entity.Role;
 import com.proyectos.vn_cambio_rol.entity.User;
+import com.proyectos.vn_cambio_rol.entity.UserRole;
 import com.proyectos.vn_cambio_rol.service.UserService;
 
 @RestController
@@ -23,21 +25,20 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-	//@PutMapping("/{id}/rol")
-	//public ResponseEntity<User> cambiarRol(@PathVariable Long id, @RequestBody CambiarRolRequest request) {
-		//User usuarioActualizado = userService.cambiarRolDeUsuario(id, request.getNuevoRol());
-		//return ResponseEntity.ok(usuarioActualizado);
-	//}
-	
-	@GetMapping("/{userId}/roles")
-	public ResponseEntity<Set<Role>> rolesDeUsuario(@PathVariable Long userId) {
-		Set<Role> roles = userService.obtenerRolesDeUsuario(userId);
-        return ResponseEntity.ok(roles);
-	}
-	
-	
+	 @PutMapping("/{id}/rol")
+	 public ResponseEntity<UserRole> updateUserRol(@PathVariable Long id, @RequestBody CambiarRolRequest request) {
+	 User usuarioActualizado = userService.updateUserRol(id, request.getNuevoRol());
+	 return ResponseEntity.ok(usuarioActualizado);
+	 }
+
+//	@GetMapping("/{userId}/roles")
+//	public ResponseEntity<Set<Role>> rolesDeUsuario(@PathVariable Long userId) {
+//		Set<Role> roles = userService.obtenerRolesDeUsuario(userId);
+//        return ResponseEntity.ok(roles);
+//	}
+
 	@GetMapping
-	public List<User> getAllUsers() {
-		return userService.getAllUsers();
+	public List<UserRole> getAllUsersWithRoles() {
+		return userService.getAllUsersAndRoles();
 	}
 }

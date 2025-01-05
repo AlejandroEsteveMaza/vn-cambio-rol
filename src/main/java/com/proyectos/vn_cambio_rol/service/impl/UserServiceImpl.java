@@ -2,6 +2,7 @@ package com.proyectos.vn_cambio_rol.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -25,7 +26,7 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private RoleRepository roleRepository;
-	
+
 	@Autowired
 	private UserRoleRepository userRoleRepository;
 
@@ -34,8 +35,7 @@ public class UserServiceImpl implements UserService {
 		User user = userRepository.findById(userId)
 				.orElseThrow(() -> new NoSuchElementException("Usuario no encontrado"));
 
-		Role role = roleRepository.findById(roleId)
-				.orElseThrow(() -> new NoSuchElementException("Rol no encontrado"));
+		Role role = roleRepository.findById(roleId).orElseThrow(() -> new NoSuchElementException("Rol no encontrado"));
 
 		UserRole userRole = new UserRole();
 		userRole.setUser(user);
@@ -53,23 +53,30 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public Set<Role> obtenerRolesDeUsuario(Long userId) {
-	    User user = userRepository.findById(userId)
-	            .orElseThrow(() -> new NoSuchElementException("Usuario no encontrado"));
+//		Set<UserRole> userRoles = userRoleRepository.findByUserId(userId)
+//				.orElseThrow(() -> new NoSuchElementException("Usuario no encontrado"));
+//		;
+//
+//		return userRoles.stream().map(UserRole::getRole).collect(Collectors.toSet());
+		// Obtiene el conjunto de roles del usuario
+		Set<UserRole> userRoles = userRoleRepository.findByUserId(userId);
 
-	    return userRoleRepository.findByUser(user).stream()
-	            .map(UserRole::getRole)  
-	            .collect(Collectors.toSet());  
+		// Verifica si el conjunto está vacío y lanza una excepción si no hay roles
+		if (userRoles.isEmpty()) {
+			throw new NoSuchElementException("Usuario no encontrado o sin roles asignados");
+		}
+
+		// Retorna los roles asociados al usuario
+		return userRoles.stream().map(UserRole::getRole).collect(Collectors.toSet());
 	}
 
+//	public Set<User> obtenerUsuariosDeRol(Long roleId) {
+//		Role role = roleRepository.findById(roleId).orElseThrow(() -> new NoSuchElementException("Rol no encontrado"));
+//
+//		return role.getUserRoles().stream().map(UserRole::getUser).collect(Collectors.toSet());
+//	}
 
-	public Set<User> obtenerUsuariosDeRol(Long roleId) {
-		Role role = roleRepository.findById(roleId)
-				.orElseThrow(() -> new NoSuchElementException("Rol no encontrado"));
-
-		return role.getUserRoles().stream().map(UserRole::getUser).collect(Collectors.toSet());
-	}
-
-	public void cambiarRolDeUsuario(Long userId, Long oldRoleId, Long newRoleId) {
+	public void updateUserRol(Long userId, Long oldRoleId, Long newRoleId) {
 		eliminarRolDeUsuario(userId, oldRoleId);
 
 		asignarRolAUsuario(userId, newRoleId);
@@ -78,6 +85,12 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<User> getAllUsers() {
 		return userRepository.findAll();
+	}
+
+	@Override
+	public List<UserRole> getAllUsersAndRoles() {
+		List<UserRole> userRoles = userRoleRepository.findAllWithUsersAndRoles();
+		return userRoles;
 	}
 
 }

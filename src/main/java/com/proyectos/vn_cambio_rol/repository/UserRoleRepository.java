@@ -3,8 +3,10 @@ package com.proyectos.vn_cambio_rol.repository;
 import com.proyectos.vn_cambio_rol.entity.User;
 import com.proyectos.vn_cambio_rol.entity.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -21,4 +23,8 @@ public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
     Set<UserRole> findByRoleId(Long roleId);
     
     Set<UserRole> findByUser(User user); 
+    
+    
+    @Query("SELECT ur FROM UserRole ur JOIN FETCH ur.user u JOIN FETCH ur.role r")
+    List<UserRole> findAllWithUsersAndRoles();
 }
