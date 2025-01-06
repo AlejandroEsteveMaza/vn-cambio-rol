@@ -26,16 +26,14 @@ public class UserController {
 	private UserService userService;
 
 	 @PutMapping("/{id}/rol")
-	 public ResponseEntity<UserRole> updateUserRol(@PathVariable Long id, @RequestBody CambiarRolRequest request) {
-	 User usuarioActualizado = userService.updateUserRol(id, request.getNuevoRol());
-	 return ResponseEntity.ok(usuarioActualizado);
+	 public ResponseEntity<String> cambiarRol(
+	     @PathVariable Long id,
+	     @RequestBody CambiarRolRequest request) {
+
+		 userService.updateUserRol(id, request.getRoleId(), request.getCategoryId());
+	     return ResponseEntity.ok("Rol actualizado correctamente");
 	 }
 
-//	@GetMapping("/{userId}/roles")
-//	public ResponseEntity<Set<Role>> rolesDeUsuario(@PathVariable Long userId) {
-//		Set<Role> roles = userService.obtenerRolesDeUsuario(userId);
-//        return ResponseEntity.ok(roles);
-//	}
 
 	@GetMapping
 	public List<UserRole> getAllUsersWithRoles() {

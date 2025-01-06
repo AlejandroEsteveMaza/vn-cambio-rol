@@ -30,7 +30,7 @@ public class UserRole {
 	@JoinColumn(name = "role_id", nullable = false)
 	private Role role;
 
-	private Integer categoryID;
+	private Long categoryId;
 	
 	@Column(name = "assigned_at", nullable = false)
 	private LocalDateTime assignedAt;

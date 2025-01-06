@@ -4,5 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class CambiarRolRequest {
-	private String nuevoRol;
+	private Long roleId;
+	private Long categoryId;
 }

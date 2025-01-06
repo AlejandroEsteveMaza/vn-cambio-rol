@@ -30,26 +30,9 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserRoleRepository userRoleRepository;
 
-	@Transactional
-	public void asignarRolAUsuario(Long userId, Long roleId) {
-		User user = userRepository.findById(userId)
-				.orElseThrow(() -> new NoSuchElementException("Usuario no encontrado"));
 
-		Role role = roleRepository.findById(roleId).orElseThrow(() -> new NoSuchElementException("Rol no encontrado"));
-
-		UserRole userRole = new UserRole();
-		userRole.setUser(user);
-		userRole.setRole(role);
-		userRole.setAssignedAt(LocalDateTime.now());
-
-		userRoleRepository.save(userRole);
-	}
-
-	public void eliminarRolDeUsuario(Long userId, Long roleId) {
-		UserRole userRole = userRoleRepository.findByUserIdAndRoleId(userId, roleId)
-				.orElseThrow(() -> new NoSuchElementException("Relación de rol de usuario no encontrada"));
-
-		userRoleRepository.delete(userRole);
+	public void eliminarRolDeUsuario(long userId) {
+		userRoleRepository.deleteByUserId(userId);
 	}
 
 	public Set<Role> obtenerRolesDeUsuario(Long userId) {
@@ -70,18 +53,6 @@ public class UserServiceImpl implements UserService {
 		return userRoles.stream().map(UserRole::getRole).collect(Collectors.toSet());
 	}
 
-//	public Set<User> obtenerUsuariosDeRol(Long roleId) {
-//		Role role = roleRepository.findById(roleId).orElseThrow(() -> new NoSuchElementException("Rol no encontrado"));
-//
-//		return role.getUserRoles().stream().map(UserRole::getUser).collect(Collectors.toSet());
-//	}
-
-	public void updateUserRol(Long userId, Long oldRoleId, Long newRoleId) {
-		eliminarRolDeUsuario(userId, oldRoleId);
-
-		asignarRolAUsuario(userId, newRoleId);
-	}
-
 	@Override
 	public List<User> getAllUsers() {
 		return userRepository.findAll();
@@ -91,6 +62,36 @@ public class UserServiceImpl implements UserService {
 	public List<UserRole> getAllUsersAndRoles() {
 		List<UserRole> userRoles = userRoleRepository.findAllWithUsersAndRoles();
 		return userRoles;
+	}
+
+	@Override
+	public List<UserRole> updateUserRol(long userId, long roleId, long categoryId) {
+
+		User user = userRepository.findById(userId)
+				.orElseThrow(() -> new NoSuchElementException("Usuario no encontrado"));
+
+		Role role = roleRepository.findById(roleId).orElseThrow(() -> new NoSuchElementException("Rol no encontrado"));
+
+		if (categoryId < 1 || categoryId > 4) {
+			throw new IllegalArgumentException("Categoría inválida. Debe ser un número entre 1 y 4.");
+		}
+
+		eliminarRolDeUsuario(userId);
+
+		UserRole userRole = new UserRole();
+		userRole.setUser(user);
+		userRole.setRole(role);
+		userRole.setCategoryId(categoryId);
+		userRole.setAssignedAt(LocalDateTime.now());
+		userRoleRepository.save(userRole);
+
+		asignarRolAUsuario(userRole);
+		return null;
+	}
+	
+	@Transactional
+	public void asignarRolAUsuario(UserRole userRole) {
+		userRoleRepository.save(userRole);
 	}
 
 }

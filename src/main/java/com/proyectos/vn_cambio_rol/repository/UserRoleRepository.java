@@ -5,6 +5,7 @@ import com.proyectos.vn_cambio_rol.entity.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,4 +28,7 @@ public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
     
     @Query("SELECT ur FROM UserRole ur JOIN FETCH ur.user u JOIN FETCH ur.role r")
     List<UserRole> findAllWithUsersAndRoles();
+    
+    @Transactional
+    void deleteByUserId(Long userId);
 }

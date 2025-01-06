@@ -39,7 +39,7 @@ public class VnCambioDeRolApplication {
 			UserRole userRole1 = new UserRole();
 			userRole1.setUser(user);
 			userRole1.setRole(empleadoRole);
-			userRole1.setCategoryID(2);
+			userRole1.setCategoryId(2L);
 			userRole1.setAssignedAt(LocalDateTime.now());
 
 

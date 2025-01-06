@@ -14,6 +14,6 @@ public interface UserService {
 	
 	public List<UserRole> getAllUsersAndRoles();
 	
-	public List<UserRole> updateUserRol();
+	public List<UserRole> updateUserRol(long userId,long roleId, long categoryId);
 	
 }
